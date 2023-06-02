@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.demo.dao.dao.TestTableDao">
+	<resultMap id="BaseResultMap" type="com.ht.demo.dao.domain.TestTableDO">
+		<result column="id" property="id" />
+		<result column="test_name" property="testName" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="deleted" property="deleted" />
+		<result column="remark" property="remark" />
+	</resultMap>
+
+	<parameterMap id="TestTableDO" type="com.ht.demo.dao.domain.TestTableDO"/>
+
+	<sql id="Base_Column_List">
+		id,test_name, create_time, update_time, deleted, remark
+	</sql>
+
+	<select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM test_table
+		WHERE id = #{id}
+	</select>
+	
+	<select id="findByCondition" resultMap="BaseResultMap" parameterMap="TestTableDO">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM test_table
+		<include refid="whereCondition" />
+	</select>
+
+    <select id="findForPageCount" resultType="java.lang.Integer">
+        SELECT
+        COUNT(*)
+        FROM test_table
+        <include refid="whereQuery"/>
+    </select>
+
+    <select id="findForPage" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM test_table
+        <include refid="whereQuery"/>
+        order by create_time DESC
+        <if test="needPaging == true">
+            limit #{begin}, #{pageSize} 
+        </if>
+    </select>
+
+    <sql id="whereQuery">
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="id!=null and id!=''"> and id = #{id} </if>
+            <if test="testName!=null and testName!=''"> and test_name = #{testName} </if>
+            <if test="createTime!=null and createTime!=''"> and create_time = #{createTime} </if>
+            <if test="updateTime!=null and updateTime!=''"> and update_time = #{updateTime} </if>
+            <if test="deleted!=null and deleted!=''"> and deleted = #{deleted} </if>
+            <if test="remark!=null and remark!=''"> and remark = #{remark} </if>
+        </trim>
+    </sql>
+	
+	<sql id="whereCondition">
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="id!=null and id!=''"> and id = #{id} </if>
+			<if test="testName!=null and testName!=''"> and test_name = #{testName} </if>
+			<if test="createTime!=null and createTime!=''"> and create_time = #{createTime} </if>
+			<if test="updateTime!=null and updateTime!=''"> and update_time = #{updateTime} </if>
+			<if test="deleted!=null and deleted!=''"> and deleted = #{deleted} </if>
+			<if test="remark!=null and remark!=''"> and remark = #{remark} </if>
+		</trim>
+	</sql>
+</mapper>
