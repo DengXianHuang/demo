@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.demo.dao.dao.system.SysUserDao">
+	<resultMap id="BaseResultMap" type="com.ht.demo.dao.domain.system.SysUserDO">
+		<result column="id" property="id" />
+		<result column="login_no" property="loginNo" />
+		<result column="user_name" property="userName" />
+		<result column="nick_name" property="nickName" />
+		<result column="sys_dept_id" property="sysDeptId" />
+		<result column="phone_no" property="phoneNo" />
+		<result column="user_type" property="userType" />
+		<result column="pass_wd_md" property="passWdMd" />
+		<result column="pass_wd" property="passWd" />
+		<result column="email" property="email" />
+		<result column="user_status" property="userStatus" />
+		<result column="login_ip" property="loginIp" />
+		<result column="login_date" property="loginDate" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="del_flag" property="delFlag" />
+		<result column="dept_name" property="deptName" />
+		<result column="remark" property="remark" />
+		<result column="sex" property="sex" />
+	</resultMap>
+
+	<parameterMap id="SysUserDO" type="com.ht.demo.dao.domain.system.SysUserDO"/>
+
+	<sql id="Base_Column_List">
+		id,login_no, user_name, nick_name, sys_dept_id, phone_no, user_type, pass_wd_md, pass_wd, email, user_status, login_ip, login_date, create_time, update_time, del_flag,
+		dept_name, remark,sex
+	</sql>
+
+	<select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sys_user
+		WHERE id = #{id}
+	</select>
+	
+	<select id="findByCondition" resultMap="BaseResultMap" parameterMap="SysUserDO">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sys_user
+		<include refid="whereCondition" />
+	</select>
+
+	<select id="findSysUserList" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sys_user
+		<include refid="whereQuery"/>
+	</select>
+
+    <select id="findForPageCount" resultType="java.lang.Integer">
+        SELECT
+        COUNT(*)
+        FROM sys_user
+        <include refid="whereQuery"/>
+    </select>
+
+    <select id="findForPage" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM sys_user
+        <include refid="whereQuery"/>
+        order by create_time DESC
+        <if test="needPaging == true">
+            limit #{begin}, #{pageSize} 
+        </if>
+    </select>
+
+	<sql id="whereCondition">
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="id!=null and id!=''"> and id = #{id} </if>
+			<if test="loginNo!=null and loginNo!=''"> and login_no = #{loginNo} </if>
+			<if test="userName!=null and userName!=''"> and user_name = #{userName} </if>
+			<if test="nickName!=null and nickName!=''"> and nick_name = #{nickName} </if>
+			<if test="sysDeptId!=null and sysDeptId!=''"> and sys_dept_id = #{sysDeptId} </if>
+			<if test="phoneNo!=null and phoneNo!=''"> and phone_no = #{phoneNo} </if>
+			<if test="userType!=null and userType!=''"> and user_type = #{userType} </if>
+			<if test="passWdMd!=null and passWdMd!=''"> and pass_wd_md = #{passWdMd} </if>
+			<if test="passWd!=null and passWd!=''"> and pass_wd = #{passWd} </if>
+			<if test="email!=null and email!=''"> and email = #{email} </if>
+			<if test="userStatus!=null and userStatus!=''"> and user_status = #{userStatus} </if>
+			<if test="loginIp!=null and loginIp!=''"> and login_ip = #{loginIp} </if>
+			<if test="loginDate!=null and loginDate!=''"> and login_date = #{loginDate} </if>
+			<if test="createTime!=null"> and create_time = #{createTime} </if>
+			<if test="updateTime!=null"> and update_time = #{updateTime} </if>
+			<if test="delFlag!=null and delFlag!=''"> and del_flag = #{delFlag} </if>
+			<if test="deptName!=null and deptName!=''"> and dept_name = #{deptName} </if>
+			<if test="sex!=null and sex!=''"> and sex = #{sex} </if>
+		</trim>
+	</sql>
+	<sql id="whereQuery">
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="sysUserId!=null and sysUserId!=''"> and id = #{sysUserId} </if>
+			<if test="loginNo!=null and loginNo!=''"> and login_no = #{loginNo} </if>
+			<if test="userName!=null and userName!=''"> and user_name like concat('%' #{userName} '%') </if>
+			<if test="nickName!=null and nickName!=''"> and nick_name like concat('%' #{nickName} '%') </if>
+			<if test="sysDeptId!=null and sysDeptId!=''">
+				AND (sys_dept_id = #{sysDeptId} OR sys_dept_id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(#{sysDeptId}, ancestors) ))
+			</if>
+			<if test="phoneNo!=null and phoneNo!=''"> and phone_no = #{phoneNo} </if>
+			<if test="userType!=null and userType!=''"> and user_type = #{userType} </if>
+			<if test="passWdMd!=null and passWdMd!=''"> and pass_wd_md = #{passWdMd} </if>
+			<if test="passWd!=null and passWd!=''"> and pass_wd = #{passWd} </if>
+			<if test="email!=null and email!=''"> and email = #{email} </if>
+			<if test="userStatus!=null and userStatus!=''"> and user_status = #{userStatus} </if>
+			<if test="loginIp!=null and loginIp!=''"> and login_ip = #{loginIp} </if>
+			<if test="loginDate!=null and loginDate!=''"> and login_date = #{loginDate} </if>
+			<if test="createTime!=null"> and create_time = #{createTime} </if>
+			<if test="updateTime!=null"> and update_time = #{updateTime} </if>
+			<if test="delFlag!=null and delFlag!=''"> and del_flag = #{delFlag} </if>
+			<if test="deptName!=null and deptName!=''"> and dept_name like concat('%' #{deptName} '%') </if>
+			<if test="sex!=null and sex!=''"> and sex = #{sex} </if>
+		</trim>
+	</sql>
+</mapper>
