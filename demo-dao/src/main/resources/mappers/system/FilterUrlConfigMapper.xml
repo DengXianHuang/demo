@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.demo.dao.dao.system.FilterUrlConfigDao">
+	<resultMap id="BaseResultMap" type="com.ht.demo.dao.domain.system.FilterUrlConfigDO">
+		<result column="id" property="id" />
+		<result column="filter_type" property="filterType" />
+		<result column="request_uri" property="requestUri" />
+		<result column="request_name" property="requestName" />
+		<result column="enable_status" property="enableStatus" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="deleted" property="deleted" />
+		<result column="remark" property="remark" />
+	</resultMap>
+
+	<parameterMap id="FilterUrlConfigDO" type="com.ht.demo.dao.domain.system.FilterUrlConfigDO"/>
+
+	<sql id="Base_Column_List">
+		id,filter_type, request_uri, request_name, enable_status, create_time, update_time, deleted, remark
+	</sql>
+
+	<select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM filter_url_config
+		WHERE id = #{id}
+	</select>
+	
+	<select id="findByCondition" resultMap="BaseResultMap" parameterMap="FilterUrlConfigDO">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM filter_url_config
+		<include refid="whereCondition" />
+	</select>
+
+    <select id="findForPageCount" resultType="java.lang.Integer">
+        SELECT
+        COUNT(*)
+        FROM filter_url_config
+        <include refid="whereQuery"/>
+    </select>
+
+    <select id="findForPage" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM filter_url_config
+        <include refid="whereQuery"/>
+        order by create_time DESC
+        <if test="needPaging == true">
+            limit #{begin}, #{pageSize} 
+        </if>
+    </select>
+
+    <sql id="whereQuery">
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="filterUrlConfigId!=null and filterUrlConfigId!=''"> and id = #{id} </if>
+            <if test="filterType!=null and filterType!=''"> and filter_type = #{filterType} </if>
+            <if test="requestUri!=null and requestUri!=''"> and request_uri = #{requestUri} </if>
+            <if test="requestName!=null and requestName!=''"> and request_name = #{requestName} </if>
+            <if test="enableStatus!=null and enableStatus!=''"> and enable_status = #{enableStatus} </if>
+            <if test="createTime!=null and createTime!=''"> and create_time = #{createTime} </if>
+            <if test="updateTime!=null and updateTime!=''"> and update_time = #{updateTime} </if>
+            <if test="deleted!=null and deleted!=''"> and deleted = #{deleted} </if>
+            <if test="remark!=null and remark!=''"> and remark = #{remark} </if>
+        </trim>
+    </sql>
+	
+	<sql id="whereCondition">
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="id!=null and id!=''"> and id = #{id} </if>
+			<if test="filterType!=null and filterType!=''"> and filter_type = #{filterType} </if>
+			<if test="requestUri!=null and requestUri!=''"> and request_uri = #{requestUri} </if>
+			<if test="requestName!=null and requestName!=''"> and request_name = #{requestName} </if>
+			<if test="enableStatus!=null and enableStatus!=''"> and enable_status = #{enableStatus} </if>
+			<if test="createTime!=null and createTime!=''"> and create_time = #{createTime} </if>
+			<if test="updateTime!=null and updateTime!=''"> and update_time = #{updateTime} </if>
+			<if test="deleted!=null and deleted!=''"> and deleted = #{deleted} </if>
+			<if test="remark!=null and remark!=''"> and remark = #{remark} </if>
+		</trim>
+	</sql>
+</mapper>
